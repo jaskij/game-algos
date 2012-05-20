@@ -4,5 +4,6 @@ class nmkEngine
 public:
 	nmkEngine(void);
 	~nmkEngine(void);
+	
 };
 

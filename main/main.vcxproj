@@ -41,6 +41,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <AdditionalIncludeDirectories>C:\Users\Administrator\Desktop\projekty\kolo_AI\repo\game-algos\random-algo;C:\Users\Administrator\Desktop\projekty\kolo_AI\repo\game-algos\nmk-engine;C:\Users\Administrator\Desktop\projekty\kolo_AI\repo\game-algos\basic-protocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -64,6 +65,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\basic-protocol\basic-protocol.vcxproj">
+      <Project>{203c2189-ed9e-444b-8e46-6b6ee75d3f27}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\nmk-engine\nmk-engine.vcxproj">
+      <Project>{a2f36230-ec2b-41e1-855d-60791d95c2ec}</Project>
+    </ProjectReference>
+    <ProjectReference Include="..\random-algo\random-algo.vcxproj">
+      <Project>{0e437bb1-8e31-4250-9fbf-51800b9f7224}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
