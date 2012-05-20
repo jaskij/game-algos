@@ -4,3 +4,5 @@ ipch/
 */Debug/
 *.opensdf
 *.sdf
+*.user
+*.suo
