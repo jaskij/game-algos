@@ -2,8 +2,5 @@
 Debug/
 ipch/
 */Debug/
-*.user
-*.suo
 *.opensdf
 *.sdf
-*.filters
