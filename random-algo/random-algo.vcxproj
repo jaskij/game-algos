@@ -41,6 +41,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
+      <PrecompiledHeader>Create</PrecompiledHeader>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -61,9 +62,15 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="RandomAlgo.h" />
+    <ClInclude Include="StdAfx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="RandomAlgo.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\nmk-engine\nmk-engine.vcxproj">
+      <Project>{a2f36230-ec2b-41e1-855d-60791d95c2ec}</Project>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

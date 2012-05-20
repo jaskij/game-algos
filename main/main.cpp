@@ -1,4 +1,4 @@
-#include"stdafx.h"
+#include "stdafx.h"
 #include "RandomAlgo.h"
 #include "BasicProtocol.h"
 
