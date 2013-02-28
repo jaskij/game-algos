@@ -2,31 +2,16 @@
 
 #include <stdint.h>
 
-#ifdef _WIN32
-	//this symbol must be defined in each engine project
-	#ifdef ENGINEDLL
-		#define dllFunction __declspec(dllexport) 
-	#else
-		#define dllFunction __declspec(dllimport)
-	#endif
-#elif defined __unix__
-	#define dllFunction
-#endif
-
 namespace engine
 {
-
-	/// \brief	state of a single field
-	typedef unsigned char FieldState;
 
 	/// \brief object describing a particular game state
 	struct GameState;
 
-	/// \brief returns Size of Game State object in bytes
-	dllFunction uint32_t getGameStateSize();
+	///	\brief a compressed GameState
+	struct CompressedState;
 
 	/*! \brief	for use with server communications and GUI
-	
 		Should be redesigned to make it generic(fitting all games)
 	*/
 	struct PublicState
@@ -39,9 +24,12 @@ namespace engine
 
 	/// \brief converts game state to verbose version, designed to be easily interpreted outside of the engine. 
 	/// see PublicState definition for details
-	dllFunction PublicState convertToPublic(const GameState& State);
+	PublicState convertToPublic(const GameState& State);
+	///	\overload
+	PublicState convertToPublic(const CompressedState& State);
 
-	enum GameWinner
+	/// \brief	result of a game
+	enum GameResult
 	{
 		NOT_FINISHED,
 		PLAYER_1,
@@ -49,18 +37,48 @@ namespace engine
 		DRAW
 	};
 
-	dllFunction GameWinner gameFinished(const GameState& State);
+	/// \brief	has the game finished? what's the result?
+	GameResult gameFinished(const GameState& State);
+	///	\overload
+	GameResult gameFinished(const CompressedState& State);
 
 	/*!	\brief	Evaluates moves
 		\return	Move score
 	*/
-	dllFunction int32_t evaluate(const GameState& Move, const GameState& Previous) ;
+	int32_t evaluate(const GameState& Move, const GameState& Previous);
+	///	\overload
+	int32_t evaluate(const CompressedState& Move, const CompressedState& Previous);
+
+	/*!	\brief	compress a GameState
+		\param	state	GameState to be compressed
+		\return	a CompressedState representing the same game state
+	*/
+	CompressedState compress(const GameState& state);
+	/*!	\brief	decompress a CompressedState
+		\param	state	CompressedState to be compressed
+		\return	a GameState representing the same game state
+	*/
+	GameState decompress(const CompressedState& state);
 	
 
-	//NOTE: having engine stateless requires passing last 3 parameters. adding state would enable saving them internally
-	dllFunction uint32_t genMoves(const GameState& current, GameState* buffer, const uint32_t bufferSize, const GameState& lastGeneratedGameState) ;
-	/*!	\brief	Generates moves, using CompressedGamestate
+	/*!	\brief	Generates moves, using GameState
+				initialized separately from genMovesC, moves are also generated independently
 		\return	Number of moves generated
 	*/
+	uint16_t genMovesD();
+	/*!	\brief	generates moves, using CompressedState
+				initialized separately from genMovesC, moves are also generated independently
+		\return	number of moves generated
+	*/
+	uint16_t genMovesC();
 
+	/*!	\brief	initializes the moves generator
+				due to differences in buffers, etc. engine operates separately on GameState and CompressedState
+		\param	current		what is the state of the board?
+		\param	buffer		buffer for pointers to GameState objects
+		\param	bufferSize	size of the buffer
+	*/
+	void initGen(const GameState& current, GameState** buffer, const uint32_t bufferSize);
+	///	\overload	due to differences in buffers, etc. engine operates separately on GameState and CompressedState
+	void initGen(const CompressedState& current, CompressedState** buffer, const uint32_t bufferSize);
 }
