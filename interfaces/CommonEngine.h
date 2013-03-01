@@ -19,7 +19,7 @@ namespace engine
 		/// \brief	whose turn it is
 		uint8_t player;
 		/// \brief	state of the whole board
-		FieldState board[49];
+		uint8_t board[49];
 	};
 
 	/// \brief converts game state to verbose version, designed to be easily interpreted outside of the engine. 
