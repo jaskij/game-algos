@@ -586,7 +586,7 @@ uint16_t engine::genMovesUncomp()
 		}
 		else 
 		{
-			if(((possibleMoves[genLastY * BOARD_WB_WIDTH + genLastX].jumpFrom >> lastJump) & 1) == 1)
+			if(((possibleMoves[genLastY * BOARD_WB_WIDTH + genLastX].jumpFrom >> JUMP_WB_SHIFT[lastJump]) & 1) == 1)
 			{
 				genBufferU[i] -> board[(genLastY - 2) * BOARD_WIDTH + genLastX - 2] =
 						genCurrent.player == GameState::ONE ?
@@ -644,7 +644,7 @@ uint16_t engine::genMovesComp()
 		}
 		else 
 		{
-			if(((possibleMoves[genLastY * BOARD_WB_WIDTH + genLastX].jumpFrom >> lastJump) & 1) == 1)
+			if(((possibleMoves[genLastY * BOARD_WB_WIDTH + genLastX].jumpFrom >> JUMP_WB_SHIFT[lastJump]) & 1) == 1)
 			{
 				Tmp . board[(genLastY - 2) * BOARD_WIDTH + genLastX - 2] =
 						genCurrent.player == GameState::ONE ?
