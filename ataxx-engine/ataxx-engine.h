@@ -125,5 +125,6 @@ namespace engine
 
 	bool isMoveValid(GameState Current, CoordU from, CoordU to);
 
+	void makeMove(GameState Current, GameState& After, CoordU from, CoordU to);
 	GameState makeMove(GameState Current, CoordU from, CoordU to);
 }
