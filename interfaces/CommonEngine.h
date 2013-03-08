@@ -14,6 +14,7 @@ namespace engine
 
 	/*! \brief for use with server communications and GUI
 	Should be redesigned to make it generic(fitting all games)
+
 	*/
 	struct PublicState
 	{
@@ -101,4 +102,5 @@ namespace engine
 
 	/// \brief returns GameState size in bytes 
 	unsigned getGameStateSize();
+
 }
