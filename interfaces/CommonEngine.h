@@ -101,4 +101,7 @@ namespace engine
 
 	/// \brief returns GameState size in bytes 
 	unsigned getGameStateSize();
+
+	/// \brief indicates if current player can move a piece located at coords from
+	bool canMoveFrom( engine::GameState* currentGameState, CoordU from );
 }

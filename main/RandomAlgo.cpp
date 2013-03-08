@@ -11,7 +11,7 @@ namespace algo
 
 	RandomAlgo::~RandomAlgo()
 	{
-
+		freeAllStates();
 	}
 
 	engine::GameState* RandomAlgo::chooseMove(const engine::GameState * const currentState)
@@ -37,7 +37,7 @@ namespace algo
 	{
 		engine::GameState** newBuffer = new engine::GameState* [STATE_BUFFER_SIZE];
 		possibleMoves.push_back(newBuffer);
-		memcpy(*possibleMoves.back(), &stateBuffer, sizeof(engine::GameState*) * STATE_BUFFER_SIZE);
+		memcpy(possibleMoves.back(), stateBuffer, sizeof(engine::GameState*) * STATE_BUFFER_SIZE);
 	}
 
 	engine::GameState* RandomAlgo::getMove(unsigned moveIndex)

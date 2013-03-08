@@ -45,6 +45,7 @@ void printWinner( engine::GameResult result )
 		std::cout << "It is a draw\n";
 		break;
 	}
+	system("PAUSE");
 }
 
 void cleanUp(Player** players) 
@@ -69,10 +70,13 @@ int main()
 	
 	while(engine::gameFinished(currentGameState) == engine::NOT_FINISHED)
 	{
+		if(localDebug)
+		{
+			std::cout << "Player " << playerActive + 1<< " turn\n";
+			printBoard(currentGameState);
+		}
 		currentGameState = players[playerActive]->move(currentGameState);
 		playerActive = nextPlayer(playerActive);
-		if(localDebug)
-			printBoard(currentGameState);
 	}
 	printWinner(engine::gameFinished(currentGameState));
 
@@ -115,13 +119,14 @@ gameMode_t askForMode()
 
 void printBoard( engine::GameState *encodedState ) 
 {
+	char printable[3] = {'-', '1', '2'};
 	const int BOARD_SIZE = 7;
 	engine::PublicState gameState = engine::convertToPublic(encodedState);
 	for(int i = 0; i < BOARD_SIZE; ++i)
 	{
 		for(int i2 = 0; i2 < BOARD_SIZE; ++i2)
 		{
-			std::cout << gameState.board[i * BOARD_SIZE + i2];
+			std::cout << printable[gameState.board[i * BOARD_SIZE + i2]];
 		}
 		std::cout << "\n";
 	}
@@ -140,8 +145,8 @@ void setupPlayers( gameMode_t gameMode, Player ** player1, Player ** player2 )
 		}
 	case PVE:
 		{
-			*player1 = new Computer;
-			*player2 = new LocalHuman;
+			*player1 = new LocalHuman;
+			*player2 = new Computer;
 			break;
 		}
 	case PVP:

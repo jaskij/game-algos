@@ -19,6 +19,12 @@ namespace engine
 	static const unsigned BOARD_WB_WIDTH = 11;
 	static const unsigned BOARD_WB_HEIGHT = 11;
 
+	static const int BOARD_SINGLE_BORDER = 1;
+	//WSB is short for "with single border"
+	static const unsigned BOARD_WSB_SIZE = 81;
+	static const unsigned BOARD_WSB_WIDTH = 9;
+	static const unsigned BOARD_WSB_HEIGHT = 9;
+
 	static const uint8_t COMPRESSED_EMPTY = 0x0;
 	static const uint8_t COMPRESSED_P1 = 0x1;
 	static const uint8_t COMPRESSED_P2 = 0x2;
@@ -56,7 +62,26 @@ namespace engine
 		memset(buffer, GameState::BLOCKED, BOARD_WB_SIZE * sizeof(GameState::FieldState));
 		for(unsigned i = 0; i < BOARD_HEIGHT; ++i)
 		{
-			memcpy(buffer + BOARD_BORDER + (i + BOARD_BORDER) * BOARD_WB_WIDTH, State.board, 
+			memcpy(buffer + BOARD_BORDER + (i + BOARD_BORDER) * BOARD_WB_WIDTH, State.board + i * BOARD_WIDTH, 
+				BOARD_WIDTH * sizeof(GameState::FieldState));
+		}
+	}
+	//TODO: get rid of code duplication. probably template?
+	void copyWithSingleBorder(const GameState& State, GameState::FieldState (&buffer)[BOARD_WSB_SIZE])
+	{
+		memset(buffer, GameState::BLOCKED, BOARD_WSB_SIZE * sizeof(GameState::FieldState));
+		for(unsigned i = 0; i < BOARD_HEIGHT; ++i)
+		{
+			memcpy(buffer + BOARD_SINGLE_BORDER + (i + BOARD_SINGLE_BORDER) * BOARD_WSB_WIDTH, State.board + i * BOARD_WIDTH, 
+				BOARD_WIDTH * sizeof(GameState::FieldState));
+		}
+	}
+
+	void stripSingleBorderAndCopy( GameState* State, GameState::FieldState* board )
+	{
+		for(unsigned i = 0; i < BOARD_HEIGHT; ++i)
+		{
+			memcpy(State->board + i * BOARD_WIDTH, board + BOARD_SINGLE_BORDER + (i + BOARD_SINGLE_BORDER) * BOARD_WSB_WIDTH,
 				BOARD_WIDTH * sizeof(GameState::FieldState));
 		}
 	}
@@ -119,10 +144,10 @@ namespace engine
 	// also takes coordinates for bordered board
 	bool canJumpFromTo(GameState::Player player, GameState::FieldState (&board)[BOARD_WB_SIZE], unsigned fromX, unsigned fromY, unsigned toX, unsigned toY)
 	{
-		assert(diffBiggerThan(fromX, toX) || diffBiggerThan(fromY, toY));
+		assert(!diffBiggerThan(fromX, toX) && !diffBiggerThan(fromY, toY));
 		assert(board[toY * BOARD_WB_WIDTH + toX] != GameState::BLOCKED);
 		assert(diffEqual(fromX, toX) || diffEqual(fromY, toY));
-		if(board[fromY * BOARD_WB_WIDTH + fromX] == player)
+		if(board[fromY * BOARD_WB_WIDTH + fromX] == player && board[toY * BOARD_WB_WIDTH + toX] == GameState::EMPTY)
 		{
 			return true;
 		}
@@ -542,6 +567,7 @@ namespace engine
 
 		while(genLastX < BOARD_BORDER + BOARD_WIDTH && genLastY < BOARD_BORDER + BOARD_HEIGHT && i < bufferSize)
 		{
+			//that is uninitialized read only thingy - wtf?
 			*genBufferU[i] = genCurrent;
 			if(genCurrent.player == GameState::ONE)
 			{
@@ -566,10 +592,11 @@ namespace engine
 			{
 				if(possibleMoves[genLastY * BOARD_WB_WIDTH + genLastX].clone)
 				{
+					// what about explicitly assigning P_1 to ONE and P_2 to TWO to eliminate if?
 					genBufferU[i] -> board[(genLastY - 2) * BOARD_WIDTH + genLastX - 2] =
 						genCurrent.player == GameState::ONE ?
 						GameState::P_1 :
-					GameState::P_2;
+						GameState::P_2;
 				}
 				i++;
 				putClone = true;
@@ -692,7 +719,30 @@ namespace engine
 			Current->board[to.y * BOARD_WIDTH + to.x] = GameState::P_2;
 			Current->player = GameState::ONE;
 		}
+		switchPiecesOwner(Current, to);
 		return Current;
+	}
+
+	void switchPiecesOwner(GameState* State, CoordU& newPiece)
+	{
+		GameState::FieldState board[BOARD_WSB_SIZE];
+		copyWithSingleBorder(*State, board);
+		GameState::FieldState oldOwner =  
+			board[newPiece.x + BOARD_SINGLE_BORDER + BOARD_WSB_WIDTH * (newPiece.y + BOARD_SINGLE_BORDER)]  == GameState::P_1 ?
+				GameState::P_2 : GameState::P_1;
+		GameState::FieldState newOwner = board[newPiece.x + BOARD_SINGLE_BORDER + BOARD_WSB_WIDTH * (newPiece.y + BOARD_SINGLE_BORDER)];
+		for(int i = -1; i <= 1; ++i)
+		{
+			for (int ii = -1; ii <= 1; ++ii)
+			{
+				unsigned currentField = newPiece.x + i + BOARD_SINGLE_BORDER + BOARD_WSB_WIDTH * (newPiece.y + BOARD_SINGLE_BORDER + ii);
+				if(board[currentField] == oldOwner)
+				{
+					board[currentField] = newOwner;
+				}
+			}
+		}
+		stripSingleBorderAndCopy(State, board);
 	}
 
 	CompressedState* getInitialStateComp()
@@ -733,5 +783,10 @@ namespace engine
 	unsigned getGameStateSize()
 	{
 		return sizeof(GameState);
+	}
+
+	bool canMoveFrom( engine::GameState* currentGameState, CoordU from )
+	{
+		return currentGameState->board[from.x + BOARD_WIDTH * from.y] == currentGameState->player;
 	}
 }

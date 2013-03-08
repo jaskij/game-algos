@@ -5,7 +5,7 @@
 #include "../interfaces/CommonEngine.h"
 
 //rationale: typed enum is supported in other compilers
-#ifdef _WIN32
+#ifdef _MSC_VER
 #pragma warning(disable: 4480) 
 #endif
 
@@ -59,5 +59,11 @@ namespace engine
 	\return same as param2
 	*/
 	GameState* decompress(const CompressedState* const State, GameState* Out);
+
+	/// \brief switches ownership of pieces around newPiece to it's owner
+	void switchPiecesOwner(GameState* State, CoordU& newPiece);
+
+	/// \brief copies from board with border to State
+	void stripSingleBorderAndCopy( GameState* State, GameState::FieldState* board );
 
 }
