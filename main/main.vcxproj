@@ -13,6 +13,7 @@
   <PropertyGroup Label="Globals">
     <ProjectGuid>{641E6AB7-2C26-43F1-9451-79D5F587231E}</ProjectGuid>
     <RootNamespace>main</RootNamespace>
+    <ProjectName>server</ProjectName>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -36,46 +37,61 @@
     <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
-  <PropertyGroup />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <CodeAnalysisRuleSet>SecurityRules.ruleset</CodeAnalysisRuleSet>
+    <LibraryPath>$(SolutionDir)/Debug;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <CodeAnalysisRuleSet>SecurityRules.ruleset</CodeAnalysisRuleSet>
+    <LibraryPath>$(SolutionDir)/Release;$(LibraryPath)</LibraryPath>
+  </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>Disabled</Optimization>
-      <AdditionalIncludeDirectories>C:\Users\Administrator\Desktop\projekty\kolo_AI\repo\game-algos\random-algo;C:\Users\Administrator\Desktop\projekty\kolo_AI\repo\game-algos\nmk-engine;C:\Users\Administrator\Desktop\projekty\kolo_AI\repo\game-algos\basic-protocol;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>AtaxxEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
-      <WarningLevel>Level3</WarningLevel>
+      <WarningLevel>Level4</WarningLevel>
       <Optimization>MaxSpeed</Optimization>
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
+      <TreatWarningAsError>true</TreatWarningAsError>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>AtaxxEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="AlgoFactory.cpp" />
+    <ClCompile Include="Computer.cpp" />
+    <ClCompile Include="Human.cpp" />
+    <ClCompile Include="LocalHuman.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MemoryAllocator.cpp" />
+    <ClCompile Include="RandomAlgo.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="stdafx.h" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\basic-protocol\basic-protocol.vcxproj">
-      <Project>{203c2189-ed9e-444b-8e46-6b6ee75d3f27}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\nmk-engine\nmk-engine.vcxproj">
-      <Project>{a2f36230-ec2b-41e1-855d-60791d95c2ec}</Project>
-    </ProjectReference>
-    <ProjectReference Include="..\random-algo\random-algo.vcxproj">
-      <Project>{0e437bb1-8e31-4250-9fbf-51800b9f7224}</Project>
-    </ProjectReference>
+    <ClInclude Include="..\interfaces\CommonEngine.h" />
+    <ClInclude Include="Algo.h" />
+    <ClInclude Include="AlgoFactory.h" />
+    <ClInclude Include="Computer.h" />
+    <ClInclude Include="Human.h" />
+    <ClInclude Include="LocalHuman.h" />
+    <ClInclude Include="MemoryAllocator.h" />
+    <ClInclude Include="Player.h" />
+    <ClInclude Include="RandomAlgo.h" />
+    <ClInclude Include="utility.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -15,8 +15,16 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ataxx-engine.h">
+    <ClInclude Include="..\interfaces\CommonEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="AtaxxEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="AtaxxEngine.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
 </Project>
