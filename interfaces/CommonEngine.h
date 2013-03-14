@@ -40,9 +40,9 @@ namespace engine
 
 
 	/// \brief has the game finished? what's the result?
-	GameResult gameFinished(const GameState* const State);
+	GameResult isGameFinished(const GameState* const State);
 	/// \overload
-	GameResult gameFinished(const CompressedState* const State);
+	GameResult isGameFinished(const CompressedState* const State);
 
 	/*! \brief Evaluates moves
 	\return Move score
@@ -72,7 +72,7 @@ namespace engine
 
 	/*! \brief initializes the moves generator
 	due to differences in buffers, etc. engine operates separately on GameState and CompressedState
-	\param current what is the state of the board?
+	\param current what is the state of the board? expected to remain valid until generating moves is completed
 	\param buffer buffer for pointers to GameState objects
 	\param bufferSize size of the buffer
 	*/
@@ -104,4 +104,7 @@ namespace engine
 
 	/// \brief indicates if current player can move a piece located at coords from
 	bool canMoveFrom( engine::GameState* currentGameState, CoordU from );
+
+	/// \brief indicates if both origin and destination is required for move, or destination is enough
+	bool requiresOriginToMove();
 }

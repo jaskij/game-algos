@@ -17,20 +17,23 @@ engine::GameState* LocalHuman::move( engine::GameState* currentGameState )
 {
 	bool moveCompleted = false, pieceChosen = false;
 	CoordU from, to;
-	std::cout << "Which piece would you like to move?\n";
-	while(!pieceChosen)
+	if(engine::requiresOriginToMove())
 	{
-		std::cin >> from.x >> from.y;
-		pieceChosen = engine::canMoveFrom(currentGameState, from);
-		if(!pieceChosen || !std::cin.good())
+		std::cout << "Which piece would you like to move?\n";
+		while(!pieceChosen)
 		{
-			if(!std::cin.good())
+			std::cin >> from.x >> from.y;
+			pieceChosen = engine::canMoveFrom(currentGameState, from);
+			if(!pieceChosen || !std::cin.good())
 			{
-				std::cin.sync();
-				std::cin.clear();
-				pieceChosen = false;
+				if(!std::cin.good())
+				{
+					std::cin.sync();
+					std::cin.clear();
+					pieceChosen = false;
+				}
+				std::cout << "You don't have a piece at these coordinates. Try again\n";
 			}
-			std::cout << "You don't have a piece at these coordinates. Try again\n";
 		}
 	}
 	std::cout << "Where do you want to move?\n";

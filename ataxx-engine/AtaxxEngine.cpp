@@ -2,6 +2,7 @@
 
 #include <list>
 #include <cassert>
+#include <cstdlib>
 
 /// \TODO utilize JUMP_SHIFT and JUMP_WB_SHIFT more
 /// \TODO make CLONE_SHIFT and CLONE_WB_SHIFT similar to JUMP_SHIFT
@@ -154,14 +155,14 @@ namespace engine
 		return false;
 	}
 
-	GameResult gameFinished(const CompressedState* const State)
+	GameResult isGameFinished(const CompressedState* const State)
 	{
 		GameState decompressed;
 		decompress(State, &decompressed);
-		return gameFinished(&decompressed);
+		return isGameFinished(&decompressed);
 	}
 
-	GameResult gameFinished(const GameState* const State)
+	GameResult isGameFinished(const GameState* const State)
 	{
 		int empty = countEmpty(*State);
 		int p1 = 0;
@@ -748,15 +749,14 @@ namespace engine
 	CompressedState* getInitialStateComp()
 	{
 		//see above
-		CompressedState * retVal = new CompressedState;
+		CompressedState * retVal = (CompressedState*)malloc(sizeof(CompressedState));
 		compress(getInitialStateUncomp(), retVal);
 		return retVal;
 	}
 
 	GameState* getInitialStateUncomp()
 	{
-		//yes, it causes a memleak, but it's only temporary solution until PublicState is up and running
-		GameState * retVal = new GameState;
+		GameState * retVal = (GameState*)malloc(sizeof(GameState)) ;
 		for(unsigned i = 0; i < BOARD_SIZE;++i)
 		{
 			retVal->board[i] = GameState::EMPTY;
@@ -788,5 +788,10 @@ namespace engine
 	bool canMoveFrom( engine::GameState* currentGameState, CoordU from )
 	{
 		return currentGameState->board[from.x + BOARD_WIDTH * from.y] == currentGameState->player;
+	}
+
+	bool requiresOriginToMove()
+	{
+		return true;
 	}
 }

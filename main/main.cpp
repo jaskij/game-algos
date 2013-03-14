@@ -68,7 +68,7 @@ int main()
 	engine::GameState* currentGameState = engine::getInitialStateUncomp();
 	
 	
-	while(engine::gameFinished(currentGameState) == engine::NOT_FINISHED)
+	while(engine::isGameFinished(currentGameState) == engine::NOT_FINISHED)
 	{
 		if(localDebug)
 		{
@@ -78,8 +78,8 @@ int main()
 		currentGameState = players[playerActive]->move(currentGameState);
 		playerActive = nextPlayer(playerActive);
 	}
-	printWinner(engine::gameFinished(currentGameState));
-
+	printWinner(engine::isGameFinished(currentGameState));
+	free(currentGameState);
 	cleanUp(players);
 	return 0;
 }
@@ -87,7 +87,8 @@ int main()
 void printWelcome()
 {
 	//if anyone comes up with anything at least a tiny bit less dumb, you're welcome to replace it
-	std::cout << "Welcome to KNAG's gaming app. Enjoy your attaxx!\n";
+	std::cout << "Welcome to KNAG's gaming app. Enjoy your attaxx/nmk!\n";
+	std::cout << "This build supports nmk\n";
 }
 
 gameMode_t askForMode()

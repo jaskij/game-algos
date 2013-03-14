@@ -1,9 +1,12 @@
 # git ignore file
 Debug/
+Release/
 ipch/
 */Debug/
+*/Release/
 *.opensdf
 *.sdf
 *.user
 *.suo
+*.vcxproj.filters
 docs/

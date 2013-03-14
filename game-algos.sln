@@ -7,7 +7,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "nmkEngine", "nmk-engine\nmk
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "server", "main\main.vcxproj", "{641E6AB7-2C26-43F1-9451-79D5F587231E}"
 	ProjectSection(ProjectDependencies) = postProject
-		{A59790C9-45CD-4E23-9022-8E5580568844} = {A59790C9-45CD-4E23-9022-8E5580568844}
+		{A2F36230-EC2B-41E1-855D-60791D95C2EC} = {A2F36230-EC2B-41E1-855D-60791D95C2EC}
 	EndProjectSection
 EndProject
 Global

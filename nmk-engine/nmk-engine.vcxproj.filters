@@ -23,5 +23,8 @@
     <ClInclude Include="..\interfaces\CommonEngine.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="nmkEngine.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
