@@ -11,7 +11,7 @@ namespace engine
 	const unsigned BOARD_W = 7;
 	const unsigned BOARD_H = 7;
 	const int BOARD_SIZE = BOARD_H * BOARD_W;
-	const unsigned K = 7;
+	const unsigned K = 4;
 
 	enum FieldState : uint8_t
 	{
@@ -25,7 +25,7 @@ namespace engine
 		P_1 = P1,
 		P_2 = P2	
 	};
-
+	const unsigned NO_OF_PLAYERS = 2;
 	struct GameState
 	{
 		FieldState board[BOARD_SIZE];
@@ -41,6 +41,9 @@ namespace engine
 			return board[c.y * BOARD_W + c.x];
 		}
 	};
+
+	
+
 	//current implementation uses byte sized fields, but engine is bound to perform better with fields compressed to 2
 	// bits, both due to cache and better implementations of some functions
 

@@ -680,6 +680,9 @@ namespace engine
 
 	bool isMoveValid(GameState *Current, CoordU from, CoordU to)
 	{
+		assert(isCoordValid(from));//it should have been already checked at this point
+		if(!isCoordValid(to))
+			return false;
 		GameState::FieldState tmp[BOARD_WB_SIZE];
 		copyWithBorder(*Current, tmp);
 
@@ -787,11 +790,17 @@ namespace engine
 
 	bool canMoveFrom( engine::GameState* currentGameState, CoordU from )
 	{
-		return currentGameState->board[from.x + BOARD_WIDTH * from.y] == currentGameState->player;
+		return isCoordValid(from) && currentGameState->board[from.x + BOARD_WIDTH * from.y] == currentGameState->player;
 	}
 
 	bool requiresOriginToMove()
 	{
 		return true;
+	}
+
+	/// checks if Coord lies within the board
+	bool isCoordValid(CoordU coord)
+	{
+		return coord.x < BOARD_WIDTH && coord.y < BOARD_HEIGHT;
 	}
 }
