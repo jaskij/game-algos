@@ -145,8 +145,8 @@ namespace engine
 					sequence.breakSequence(current);
 				previous = current;
 				++sequence.lenght;
-				if(sequence.lenght == K)
-					return sequence.player;
+				if(sequence.lenght == K && current != EMPTY)
+					return sequence.player == P_1 ? PLAYER_1 : PLAYER_2;
 			}
 			sequence.lenght = 0;
 		}
@@ -159,9 +159,9 @@ namespace engine
 	{
 		sequence_t sequence;
 		FieldState current = EMPTY;
-		FieldState currentSequence = EMPTY;
+		FieldState previous = EMPTY;
 		bool isBoardFull = true;
-		assert(start.y-(int)1e8 < 0)//it fails if a) some idiot changed start to unsigned which breaks the if below b) something went very wrong with computing start
+		assert(start.y-(int)1e8 < 0);//it fails if a) some idiot changed start to unsigned which breaks the if below b) something went very wrong with computing start
 		if(start.y >= 0)//if there are any fitting diagonals(>=K)
 		{
 			//start is a starting coord for all diagonals with length >= K
@@ -179,8 +179,8 @@ namespace engine
 						sequence.breakSequence(current);
 					previous = current;
 					++sequence.lenght;
-					if(sequence.lenght == K)
-						return sequence.player;
+					if(sequence.lenght == K && current != EMPTY)
+						return sequence.player == P_1 ? PLAYER_1 : PLAYER_2;
 				}
 				sequence.lenght = 0;
 			}
