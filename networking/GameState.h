@@ -30,7 +30,7 @@ namespace net
 		// maybe make them modify some temps(other object) and keep internals locked?
 	public:
 		typedef unsigned PlayerID;
-		GameState(const unsigned boardW, const unsigned boardH, unsigned numPlayers, PlayerID activePlayer = 0);
+		GameState(const unsigned boardW, const unsigned boardH, unsigned numPlayers, PlayerID startingPlayer = 0);
 		void print();
 		unsigned GameState::getBoardWidth()
 		{

@@ -267,5 +267,12 @@ namespace engine
 		return Uncomp;
 	}
 
+	std::string getConfigString()
+	{
+		std::stringstream sstream;
+		sstream << "Board is " << BOARD_W << "x" << BOARD_H << ". First of " << NUM_PLAYERS << 
+			" players to form a line of " << K << " his pieces wins.\n";
+		return sstream.str();
+	}
 }
 

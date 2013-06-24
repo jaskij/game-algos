@@ -6,12 +6,12 @@ using std::endl;
 
 namespace net
 {
-	GameState::GameState( const unsigned boardW, const unsigned boardH, unsigned numPlayers, PlayerID activePlayer /* = 0 */) : 
+	GameState::GameState( const unsigned boardW, const unsigned boardH, unsigned numPlayers, PlayerID startingPlayer /* = 0 */) : 
 		boardDimensions(boardW, boardH), 
 		board(boost::extents[boardH][boardW]),
-		currentPlayer(activePlayer)
+		currentPlayer(startingPlayer)
 	{
-		assert(activePlayer < numPlayers);
+		assert(startingPlayer < numPlayers);
 		for (unsigned i = 0; i < numPlayers; i++)
 		{
 			playerNames.push_back(std::to_string(i + 1));

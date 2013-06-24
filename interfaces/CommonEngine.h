@@ -95,4 +95,7 @@ namespace engine
 	/// \brief converts net(public) game state to engine's uncompressed variant
 	/// \return caller is responsible for freeing returned state
 	GameState* netStateToUncomp(net::GameState Public);
+
+	/// \brief returns basic engine configuration as a string
+	std::string getConfigString();
 }
