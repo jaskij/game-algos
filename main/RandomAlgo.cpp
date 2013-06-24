@@ -21,57 +21,59 @@ namespace algo
 		freeAllStates();
 	}
 
-	engine::GameState* RandomAlgo::chooseMove( engine::GameState * currentState )
+	net::GameState RandomAlgo::chooseMove( net::GameState publicState )
 	{
-		freeAllStates();
-
+		auto internalState = engine::netStateToUncomp(publicState);
 		allocator.allocateStates(STATE_BUFFER_SIZE, stateBuffer);
-		engine::initGen(currentState, stateBuffer, STATE_BUFFER_SIZE);
+		engine::initGen(internalState, stateBuffer, STATE_BUFFER_SIZE);
 		unsigned movesGened = 0;
 		unsigned noOfMoves = 0;
-		do 
+		do
 		{
 			movesGened = engine::genMovesUncomp();
 			noOfMoves += movesGened;
 			saveMoves();
 			allocator.allocateStates(STATE_BUFFER_SIZE, stateBuffer);
-		} 
-		while (movesGened == STATE_BUFFER_SIZE);
+		}
+		while(movesGened == STATE_BUFFER_SIZE);
 		assert(noOfMoves != 0);//if no moves were possible game should have been over
 		unsigned moveIndex = rand() % noOfMoves;
-		std::swap(currentState, *getPtrToState(moveIndex));
-		return currentState;
+		std::swap(internalState, *getStateAt(moveIndex));
+		publicState = engine::convertToPublic(internalState);
+		free(internalState);
+		freeAllStates();
+		return publicState;
 	}
 
-	engine::GameState** RandomAlgo::getPtrToState(unsigned moveIndex)
+	engine::GameState** RandomAlgo::getStateAt( unsigned moveIndex )
 	{
 		unsigned vectorIndex = moveIndex / STATE_BUFFER_SIZE;
 		unsigned arrayIndex = (moveIndex % STATE_BUFFER_SIZE);
-		return &(possibleMoves[vectorIndex])[arrayIndex];
+		return &(possibleStateBuffers[vectorIndex])[arrayIndex];
 	}
 
 	void RandomAlgo::saveMoves()
 	{
 		engine::GameState** newBuffer = new engine::GameState* [STATE_BUFFER_SIZE];
-		possibleMoves.push_back(newBuffer);
-		memcpy(possibleMoves.back(), stateBuffer, sizeof(engine::GameState*) * STATE_BUFFER_SIZE);
+		possibleStateBuffers.push_back(newBuffer);
+		memcpy(possibleStateBuffers.back(), stateBuffer, sizeof(engine::GameState*) * STATE_BUFFER_SIZE);
 	}
 
 	engine::GameState* RandomAlgo::getMove(unsigned moveIndex)
 	{
 		unsigned vectorIndex = moveIndex / STATE_BUFFER_SIZE;
 		unsigned arrayIndex = (moveIndex % STATE_BUFFER_SIZE);
-		return (possibleMoves[vectorIndex])[arrayIndex];
+		return (possibleStateBuffers[vectorIndex])[arrayIndex];
 	}
 
 	void RandomAlgo::freeAllStates()
 	{
-		for(auto i = possibleMoves.begin(); i != possibleMoves.end(); ++i)
+		for(auto i = possibleStateBuffers.begin(); i != possibleStateBuffers.end(); ++i)
 		{
 			allocator.freeStates(STATE_BUFFER_SIZE, *i);
 			delete [] *i;
 		}
-		possibleMoves.clear();
+		possibleStateBuffers.clear();
 		if (*stateBuffer != NULL)
 		{
 			allocator.freeStates(STATE_BUFFER_SIZE, stateBuffer);

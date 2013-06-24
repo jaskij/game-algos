@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include "../main/utility.h"
+#include "../networking/GameState.h"
 
 namespace engine
 {
@@ -12,22 +13,11 @@ namespace engine
 	/// \brief a compressed GameState
 	struct CompressedState;
 
-	/*! \brief for use with server communications and GUI
-	Should be redesigned to make it generic(fitting all games)
-	*/
-	struct PublicState
-	{
-		/// \brief whose turn it is
-		uint8_t player;
-		/// \brief state of the whole board
-		uint8_t board[49];
-	};
-
 	/// \brief converts game state to verbose version, designed to be easily interpreted outside of the engine.
 	/// see PublicState definition for details
-	PublicState convertToPublic(const GameState* State);
+	net::GameState convertToPublic(const GameState* State);
 	/// \overload
-	PublicState convertToPublic(const CompressedState* State);
+	net::GameState convertToPublic(const CompressedState* State);
 
 	/// \brief result of a game
 	enum GameResult
@@ -43,6 +33,8 @@ namespace engine
 	GameResult isGameFinished(const GameState* const State);
 	/// \overload
 	GameResult isGameFinished(const CompressedState* const State);
+	/// \overload
+	GameResult isGameFinished(const net::GameState& State);
 
 	/*! \brief Evaluates moves
 	\return Move score
@@ -81,13 +73,8 @@ namespace engine
 	void initGen(const CompressedState * const current, CompressedState* buffer[], const uint32_t bufferSize);
 
 
-	/*! \brief returns default state for current game, usually an empty board
-	  
-	  Returned reference is guaranteed to remain valid until next state generation, most likely via Algo.chooseMove
-	*/
-	GameState* getInitialStateUncomp();
-	/// \overload
-	CompressedState* getInitialStateComp();
+	/// \brief returns default state for current game, usually an empty board
+	net::GameState getInitialState();
 
 	/// \brief returns GameState size in bytes
 	unsigned getGameStateSize();
@@ -95,9 +82,6 @@ namespace engine
 	bool isMoveValid(GameState *Current, CoordU from, CoordU to); 	
 
 	GameState* makeMove(GameState* Current, CoordU from, CoordU to);
-
-	//TODO: delete after public state is properly implemented
-	PublicState convertToPublic(GameState* State);
 
 	/// \brief returns GameState size in bytes 
 	unsigned getGameStateSize();
@@ -107,4 +91,8 @@ namespace engine
 
 	/// \brief indicates if both origin and destination is required for move, or destination is enough
 	bool requiresOriginToMove();
+
+	/// \brief converts net(public) game state to engine's uncompressed variant
+	/// \return caller is responsible for freeing returned state
+	GameState* netStateToUncomp(net::GameState Public);
 }

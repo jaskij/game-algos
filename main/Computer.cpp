@@ -13,7 +13,7 @@ Computer::~Computer(void)
 {
 }
 
-engine::GameState* Computer::move( engine::GameState* currentGameState )
+net::GameState Computer::move( net::GameState currentGameState )
 {
 	return algorithm->chooseMove(currentGameState);
 }

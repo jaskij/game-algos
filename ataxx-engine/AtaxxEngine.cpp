@@ -753,11 +753,11 @@ namespace engine
 	{
 		//see above
 		CompressedState * retVal = (CompressedState*)malloc(sizeof(CompressedState));
-		compress(getInitialStateUncomp(), retVal);
+		compress(getInitialState(), retVal);
 		return retVal;
 	}
 
-	GameState* getInitialStateUncomp()
+	net::GameState getInitialState()
 	{
 		GameState * retVal = (GameState*)malloc(sizeof(GameState)) ;
 		for(unsigned i = 0; i < BOARD_SIZE;++i)

@@ -6,8 +6,6 @@ class LocalHuman :
 	public Player
 {
 public:
-	LocalHuman(void);
-	~LocalHuman(void);
-	engine::GameState* move( engine::GameState* currentGameState );
+	net::GameState move( net::GameState currentGameState );
 };
 

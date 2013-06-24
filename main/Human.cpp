@@ -10,7 +10,7 @@ Human::~Human(void)
 {
 }
 
-engine::GameState* Human::move( engine::GameState* currentGameState )
+net::GameState Human::move( net::GameState currentGameState )
 {
 	//dummy return
 	return currentGameState;

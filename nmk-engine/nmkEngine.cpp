@@ -91,19 +91,32 @@ namespace engine
 #pragma warning(default: 4100) 
 #endif
 
-	GameState* getInitialStateUncomp()
+	net::GameState getInitialState()
 	{
-		GameState* initialState = (GameState*)malloc(sizeof (GameState));
-		memset(initialState, 0, sizeof(GameState));
-		initialState->player = P_1;
-		return initialState;
+		return net::GameState(BOARD_W, BOARD_H, NUM_PLAYERS);
 	}
 
-	PublicState convertToPublic(GameState* State)
+	net::GameState convertToPublic(const GameState* State)
 	{
-		PublicState Public;
-		memcpy(Public.board, State->board, sizeof(FieldState) * BOARD_SIZE);
-		Public.player = State->player;
+		net::GameState Public(BOARD_W, BOARD_H, 2, State->player - P1);
+		for (int y = 0; y < BOARD_H; y++)
+		{
+			for (int x = 0; x < BOARD_W; x++)
+			{
+				if (State->at(x, y) == EMPTY)
+				{
+					Public.setFieldEmpty(x, y);
+				} 
+				else if (State->at(x, y) == BLOCKED)
+				{
+					Public.setFieldBlocked(x, y);
+				} 
+				else
+				{
+					Public.setPlayerIDOnField(x, y, State->at(x, y) - P1);
+				}
+			}
+		}
 		return Public;
 	}
 
@@ -193,6 +206,14 @@ namespace engine
 		return state == P_1 || state == P_2;
 	}
 
+	GameResult isGameFinished(const net::GameState& State)
+	{
+		auto uncomp = netStateToUncomp(State);
+		auto retVal = isGameFinished(uncomp);
+		free(uncomp);
+		return retVal;
+	}
+
 	GameResult isGameFinished(const GameState* const State)
 	{
 		//this is a very naive implementation, but optimizing without moving to 2 bit fields seems pointless
@@ -217,5 +238,34 @@ namespace engine
 
 		return downleft;//each value could be used since they all check for empty fields
 	}
+
+	GameState* netStateToUncomp( net::GameState Public )
+	{
+		assert(Public.getBoardHeight() == BOARD_H);
+		assert(Public.getBoardWidth() == BOARD_W);
+		GameState* Uncomp = (GameState*)malloc(sizeof(GameState));
+		Uncomp->player =  static_cast<Player>(Public.getCurrentPlayerID() + P_1);
+		for (unsigned y = 0; y < BOARD_H; ++y)
+		{
+			for (unsigned x = 0; x < BOARD_W; ++x)
+			{
+				if (Public.isFieldEmpty(x, y))
+				{
+					Uncomp->at(x, y) = EMPTY;
+				} 
+				else if(Public.isFieldBlocked(x, y))
+				{
+					Uncomp->at(x, y) = BLOCKED;
+				}
+				else
+				{
+					assert(Public.getPlayerIDOnField(x, y) >= 0 && Public.getPlayerIDOnField(x, y) < 2);
+					Uncomp->at(x, y) = static_cast<FieldState>(P1 + Public.getPlayerIDOnField(x, y));
+				}
+			}
+		}
+		return Uncomp;
+	}
+
 }
 

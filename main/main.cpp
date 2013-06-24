@@ -1,4 +1,5 @@
 #include "../interfaces/CommonEngine.h"
+#include "../networking/GameState.h"
 #include "Player.h"
 #include "Algo.h"
 #include "LocalHuman.h"
@@ -27,11 +28,10 @@ enum player
 
 void printWelcome();
 gameMode_t askForMode();
-void printBoard( engine::GameState *encodedState );
 void setupPlayers( gameMode_t gameMode, Player ** player1, Player ** player2 );
 player nextPlayer( player playerActive );
 
-void printWinner( engine::GameResult result ) 
+void printGameResult( engine::GameResult result ) 
 {
 	switch(result)
 	{
@@ -59,27 +59,23 @@ int main()
 	bool localDebug = true;
 	printWelcome();
 	gameMode_t gameMode = askForMode();
-	Player * players[NO_OF_PLAYERS] = {NULL};
+	Player * players[NO_OF_PLAYERS] = {NULL};//TODO: change to unique_ptrs
 	setupPlayers(gameMode, &players[0], &players[1]);
-	player playerActive = PLAYER1;
 	//TODO: thats an explicit call to uncompressed version of the function. and which one we use depends on algorithm, 
 	// which is determined in runtime. this has to be solved fast
 	// solution: export only PublicState, maybe make these call via algo
-	engine::GameState* currentGameState = engine::getInitialStateUncomp();
+	net::GameState currentGameState = engine::getInitialState();
 	
 	
 	while(engine::isGameFinished(currentGameState) == engine::NOT_FINISHED)
 	{
 		if(localDebug)
 		{
-			std::cout << "Player " << playerActive + 1<< " turn\n";
-			printBoard(currentGameState);
+			currentGameState.print();
 		}
-		currentGameState = players[playerActive]->move(currentGameState);
-		playerActive = nextPlayer(playerActive);
+		currentGameState = players[currentGameState.getCurrentPlayerID()]->move(currentGameState);
 	}
-	printWinner(engine::isGameFinished(currentGameState));
-	free(currentGameState);
+	printGameResult(engine::isGameFinished(currentGameState));
 	cleanUp(players);
 	return 0;
 }
@@ -116,22 +112,6 @@ gameMode_t askForMode()
 		}
 	}
 	
-}
-
-void printBoard( engine::GameState *encodedState ) 
-{
-	char printable[3] = {'-', '1', '2'};
-	const int BOARD_SIZE = 7;
-	engine::PublicState gameState = engine::convertToPublic(encodedState);
-	for(int i = 0; i < BOARD_SIZE; ++i)
-	{
-		for(int i2 = 0; i2 < BOARD_SIZE; ++i2)
-		{
-			std::cout << printable[gameState.board[i * BOARD_SIZE + i2]];
-		}
-		std::cout << "\n";
-	}
-	std::cout << "\n";
 }
 
 void setupPlayers( gameMode_t gameMode, Player ** player1, Player ** player2 ) 

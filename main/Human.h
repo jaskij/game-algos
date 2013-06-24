@@ -6,6 +6,6 @@ class Human :
 public:
 	Human(void);
 	~Human(void);
-	engine::GameState* move( engine::GameState* currentGameState );
+	net::GameState move( net::GameState currentGameState );
 };
 

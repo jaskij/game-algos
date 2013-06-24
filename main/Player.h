@@ -7,7 +7,7 @@ class Player
 public:
 	virtual ~Player(void)
 	{}
-	virtual engine::GameState* move( engine::GameState* currentGameState ) = 0;
+	virtual net::GameState move( net::GameState currentGameState ) = 0;
 };
 
 

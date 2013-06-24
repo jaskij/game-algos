@@ -10,7 +10,7 @@ class Computer :
 public:
 	Computer();
 	~Computer(void);
-	engine::GameState* move( engine::GameState* currentGameState );
+	net::GameState move( net::GameState currentGameState );
 private:
 	algo::Algo* algorithm;
 };

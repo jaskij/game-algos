@@ -10,6 +10,7 @@ namespace engine
 	//for now set to 7 to match PublicStatefrom CommonEngine, later will be set in a separate header
 	const unsigned BOARD_W = 7;
 	const unsigned BOARD_H = 7;
+	const unsigned NUM_PLAYERS = 2;
 	const int BOARD_SIZE = BOARD_H * BOARD_W;
 	const unsigned K = 4;
 
@@ -36,13 +37,16 @@ namespace engine
 			return board[row * BOARD_W + col];
 		}
 
+		FieldState at(unsigned row, unsigned col) const
+		{
+			return board[row * BOARD_W + col];
+		}
+
 		FieldState & at(CoordU c)
 		{
 			return board[c.y * BOARD_W + c.x];
 		}
 	};
-
-	
 
 	//current implementation uses byte sized fields, but engine is bound to perform better with fields compressed to 2
 	// bits, both due to cache and better implementations of some functions

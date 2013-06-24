@@ -14,6 +14,8 @@ public:
 	MemoryAllocator();
 	~MemoryAllocator();
 
+	//TODO: why allocate doesn't return the pointer? also implement single state allocator/deallocator and use them to replace random malloc/free throughout the code
+
 	/// \brief allocates count states, putting their pointers into an array pointed by where
 	void allocateStates(unsigned count, engine::GameState** where);
 

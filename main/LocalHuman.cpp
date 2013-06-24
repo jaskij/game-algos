@@ -2,20 +2,10 @@
 #include "utility.h"
 #include <iostream>
 
-
-
-LocalHuman::LocalHuman(void)
-{
-}
-
-
-LocalHuman::~LocalHuman(void)
-{
-}
-
-engine::GameState* LocalHuman::move( engine::GameState* currentGameState )
+net::GameState LocalHuman::move( net::GameState currentGameState )
 {
 	bool moveCompleted = false, pieceChosen = false;
+	auto internalState = engine::netStateToUncomp(currentGameState);
 	CoordU from, to;
 	if(engine::requiresOriginToMove())
 	{
@@ -23,7 +13,7 @@ engine::GameState* LocalHuman::move( engine::GameState* currentGameState )
 		while(!pieceChosen)
 		{
 			std::cin >> from.x >> from.y;
-			pieceChosen = engine::canMoveFrom(currentGameState, from);
+			pieceChosen = engine::canMoveFrom(internalState, from);
 			if(!pieceChosen || !std::cin.good())
 			{
 				if(!std::cin.good())
@@ -41,7 +31,7 @@ engine::GameState* LocalHuman::move( engine::GameState* currentGameState )
 	{
 		std::cin >> to.x >> to.y;
 		//Note, that this function will probably be unnecessary after implementing public state
-		moveCompleted = engine::isMoveValid(currentGameState, from, to);
+		moveCompleted = engine::isMoveValid(internalState, from, to);
 		if(!moveCompleted || !std::cin.good())
 		{
 			if(!std::cin.good())
@@ -53,5 +43,8 @@ engine::GameState* LocalHuman::move( engine::GameState* currentGameState )
 			std::cout << "It is not a valid move. Please enter another one\n";
 		}
 	}
-	return engine::makeMove(currentGameState, from, to);//note: same as above
+	auto newState = engine::makeMove(internalState, from, to);//note: same as above
+	auto retVal = engine::convertToPublic(newState);
+	free(newState);
+	return retVal;
 }
