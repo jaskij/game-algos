@@ -9,17 +9,13 @@
 namespace engine
 {
 	static GameState const *  current;
-	static GameState ** buffer;
-	static uint32_t bufferSize;
 	static int currentField;
 	static FieldState currentPlayer;
 	static GameState newTemplate;
 
-	void initGen(const GameState * const current, GameState* buffer[], const uint32_t bufferSize)
+	void initGen(const GameState * const current)
 	{
 		engine::current = current;
-		engine::buffer = buffer;
-		engine::bufferSize = bufferSize;
 		currentField = -1;
 		
 		currentPlayer = current->player == P_1 ? P1 : P2;
@@ -28,7 +24,7 @@ namespace engine
 		
 	}
 
-	unsigned genMovesUncomp()
+	unsigned genMovesUncomp(GameState* buffer[], const uint32_t bufferSize)
 	{
 		for(unsigned i = 0; i < bufferSize; ++i)
 		{
@@ -60,11 +56,8 @@ namespace engine
 	}
 
 
-	//rationale: parameters are not needed and functions are temporary anyway
-	#ifdef _MSC_VER
-	#pragma warning(disable: 4100) 
-	#endif
-	GameState* makeMove(GameState* Current, CoordU from, CoordU to)
+
+	GameState* makeMove(GameState* Current, CoordU /* 'from' doesn't make sense in this game */, CoordU to)
 	{
 		Current->at(to) = Current->player == P_1 ? P1 : P2;
 		Current->player = Current->player == P_1 ? P_2 : P_1;
@@ -76,20 +69,18 @@ namespace engine
 		return coord.x < BOARD_W && coord.y < BOARD_H;
 	}
 
-	bool isMoveValid(GameState *Current, CoordU from, CoordU to)
+	bool isMoveValid(GameState *Current, CoordU /* 'from' doesn't make sense in this game */ , CoordU to)
 	{
 		return isCoordValid(to) &&Current->at(to)==EMPTY;
 	}
 
-	bool canMoveFrom( engine::GameState* currentGameState, CoordU from )
+	bool canMoveFrom( engine::GameState* , CoordU  )
 	{
 		//this function should never be called in this game
 		assert(1==0);
 		return false;//dummy
 	}
-#ifdef _MSC_VER
-#pragma warning(default: 4100) 
-#endif
+
 
 	net::GameState getInitialState()
 	{
