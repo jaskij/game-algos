@@ -25,12 +25,12 @@ namespace algo
 	{
 		auto internalState = engine::netStateToUncomp(publicState);
 		allocator.allocateStates(STATE_BUFFER_SIZE, stateBuffer);
-		engine::initGen(internalState, stateBuffer, STATE_BUFFER_SIZE);
+		engine::initGen(internalState);
 		unsigned movesGened = 0;
 		unsigned noOfMoves = 0;
 		do
 		{
-			movesGened = engine::genMovesUncomp();
+			movesGened = engine::genMovesUncomp(stateBuffer, STATE_BUFFER_SIZE);
 			noOfMoves += movesGened;
 			saveMoves();
 			allocator.allocateStates(STATE_BUFFER_SIZE, stateBuffer);
