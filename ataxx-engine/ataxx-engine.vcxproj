@@ -48,9 +48,13 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <CodeAnalysisRuleSet>SecurityRules.ruleset</CodeAnalysisRuleSet>
+    <IncludePath>$(BOOST_ROOT_1_53_0);$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST_ROOT_1_53_0)stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <CodeAnalysisRuleSet>SecurityRules.ruleset</CodeAnalysisRuleSet>
+    <IncludePath>$(BOOST_ROOT_1_53_0);$(IncludePath)</IncludePath>
+    <LibraryPath>$(BOOST_ROOT_1_53_0)stage\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>

@@ -85,6 +85,7 @@
     <ClCompile Include="LocalHuman.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="MemoryAllocator.cpp" />
+    <ClCompile Include="ProofNumberSearch.cpp" />
     <ClCompile Include="RandomAlgo.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -96,6 +97,7 @@
     <ClInclude Include="LocalHuman.h" />
     <ClInclude Include="MemoryAllocator.h" />
     <ClInclude Include="Player.h" />
+    <ClInclude Include="ProofNumberSearch.h" />
     <ClInclude Include="RandomAlgo.h" />
     <ClInclude Include="utility.h" />
   </ItemGroup>
